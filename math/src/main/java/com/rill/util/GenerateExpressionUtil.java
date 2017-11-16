@@ -9,6 +9,7 @@ import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +37,8 @@ public class GenerateExpressionUtil {
                 rowList.add(initModel(maxValue,operator));
             }
         }
-        ExcelUtils.getInstance().exportObjects2Excel(Constants.TEMPLATEPATH, 0, rowList, null, MentalArithmeticModel.class, false, "exportWithTemplate.xlsx");
+        String targetPath = LocalDate.now().toString()+".xlsx";
+        ExcelUtils.getInstance().exportObjects2Excel(Constants.TEMPLATEPATH_100, 0, rowList, null, MentalArithmeticModel.class, false, targetPath);
     }
 
     /**
