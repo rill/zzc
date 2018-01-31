@@ -6,6 +6,7 @@ package com.rill.constants;
  */
 public class Constants {
     public static String TEMPLATEPATH = "d://template.xlsx";
+    public static String TEMPLATEPATH_100 = "template_100.xlsx";
     public static int ROWNUM = 20;
     public static int COLUMNNUM = 5;
     public static int MAXVALUE_10 = 10;

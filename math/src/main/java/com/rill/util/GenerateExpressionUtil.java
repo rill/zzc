@@ -26,7 +26,7 @@ public class GenerateExpressionUtil {
      * @param operator 运算符
      * @throws Exception
      */
-    public static void exportWithTemplate(int pageNum, int maxValue, String operator) throws Exception {
+    public static void exportWithTemplate(String templatePath,int pageNum, int maxValue, String operator) throws Exception {
         List<MentalArithmeticModel> rowList = new ArrayList<>();
         for(int m=0;m<pageNum;m++){
             for (int i = 0; i < 3;i++) {
@@ -38,7 +38,7 @@ public class GenerateExpressionUtil {
             }
         }
         String targetPath = LocalDate.now().toString()+".xlsx";
-        ExcelUtils.getInstance().exportObjects2Excel(Constants.TEMPLATEPATH_100, 0, rowList, null, MentalArithmeticModel.class, false, targetPath);
+        ExcelUtils.getInstance().exportObjects2Excel(templatePath, 0, rowList, null, MentalArithmeticModel.class, false, targetPath);
     }
 
     /**
@@ -84,6 +84,7 @@ public class GenerateExpressionUtil {
     }
 
     public static void main(String[] ars) throws Exception {
-        exportWithTemplate(Constants.PAGENUM_10,Constants.MAXVALUE_10,Constants.OPERATOR_PLUSMINUS);
+        String path = GenerateExpressionUtil.class.getClassLoader().getResource(Constants.TEMPLATEPATH_100).getPath();
+        exportWithTemplate(path,Constants.PAGENUM_10,Constants.MAXVALUE_10,Constants.OPERATOR_PLUSMINUS);
     }
 }
