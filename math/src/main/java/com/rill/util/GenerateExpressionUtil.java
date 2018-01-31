@@ -151,7 +151,6 @@ public class GenerateExpressionUtil {
 
             expr = exp.getExpressionString() + "=" + result;
             expr = expr.replaceAll(Constants.PATTERN_BRACKETS,"(  )");
-            System.out.println(expr);
         }
         return expr;
     }
