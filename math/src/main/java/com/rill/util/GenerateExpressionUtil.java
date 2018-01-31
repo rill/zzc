@@ -5,6 +5,7 @@ import com.rill.constants.Constants;
 import com.rill.model.MentalArithmeticModel;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
+import org.apache.xmlbeans.impl.common.ResolverUtil;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
@@ -26,7 +27,7 @@ public class GenerateExpressionUtil {
      * @param operator 运算符
      * @throws Exception
      */
-    public static void exportWithTemplate(String templatePath,int pageNum, int maxValue, String operator) throws Exception {
+    public static void exportWithTemplate(String templatePath,int pageNum, int maxValue, String operator,int exprType) throws Exception {
         List<MentalArithmeticModel> rowList = new ArrayList<>();
         for(int m=0;m<pageNum;m++){
             for (int i = 0; i < 3;i++) {
@@ -34,7 +35,7 @@ public class GenerateExpressionUtil {
                 rowList.add(mentalArithmeticModel);
             }
             for (int i = 0; i < Constants.ROWNUM; i++) {
-                rowList.add(initModel(maxValue,operator));
+                rowList.add(initModel(maxValue,operator,exprType));
             }
         }
         String targetPath = LocalDate.now().toString()+".xlsx";
@@ -47,13 +48,27 @@ public class GenerateExpressionUtil {
      * @param operator 运算符
      * @return
      */
-    public static MentalArithmeticModel initModel(int maxValue,String operator){
+    public static MentalArithmeticModel initModel(int maxValue,String operator,int exprType){
         MentalArithmeticModel mentalArithmeticModel = new MentalArithmeticModel();
-        mentalArithmeticModel.setCell1(generateExpr(maxValue,operator));
-        mentalArithmeticModel.setCell2(generateExpr(maxValue,operator));
-        mentalArithmeticModel.setCell3(generateExpr(maxValue,operator));
-        mentalArithmeticModel.setCell4(generateExpr(maxValue,operator));
-        mentalArithmeticModel.setCell5(generateExpr(maxValue,operator));
+        if(exprType == Constants.EXPR_TYPE_NORMAL){
+            mentalArithmeticModel.setCell1(generateExpr(maxValue,operator));
+            mentalArithmeticModel.setCell2(generateExpr(maxValue,operator));
+            mentalArithmeticModel.setCell3(generateExpr(maxValue,operator));
+            mentalArithmeticModel.setCell4(generateExpr(maxValue,operator));
+            mentalArithmeticModel.setCell5(generateExpr(maxValue,operator));
+        }else if(exprType == Constants.EXPR_TYPE_LEFT_BRACKETS){
+            mentalArithmeticModel.setCell1(generateExprWithLeftBrackets(maxValue,operator));
+            mentalArithmeticModel.setCell2(generateExprWithLeftBrackets(maxValue,operator));
+            mentalArithmeticModel.setCell3(generateExprWithLeftBrackets(maxValue,operator));
+            mentalArithmeticModel.setCell4(generateExprWithLeftBrackets(maxValue,operator));
+            mentalArithmeticModel.setCell5(generateExprWithLeftBrackets(maxValue,operator));
+        }else if(exprType == Constants.EXPR_TYPE_RIGHT_BRACKETS){
+            mentalArithmeticModel.setCell1(generateExprWithRightBrackets(maxValue,operator));
+            mentalArithmeticModel.setCell2(generateExprWithRightBrackets(maxValue,operator));
+            mentalArithmeticModel.setCell3(generateExprWithRightBrackets(maxValue,operator));
+            mentalArithmeticModel.setCell4(generateExprWithRightBrackets(maxValue,operator));
+            mentalArithmeticModel.setCell5(generateExprWithRightBrackets(maxValue,operator));
+        }
         return mentalArithmeticModel;
     }
 
@@ -76,15 +91,68 @@ public class GenerateExpressionUtil {
         Expression exp = parser.parseExpression(sb.toString());
         int result = (int) exp.getValue();
         if(result > maxValue || result < 0){
-           return generateExpr(maxValue,operator);
+            return generateExpr(maxValue,operator);
         }else{
             expr = exp.getExpressionString() + "=";
         }
         return expr;
     }
 
-    public static void main(String[] ars) throws Exception {
-        String path = GenerateExpressionUtil.class.getClassLoader().getResource(Constants.TEMPLATEPATH_100).getPath();
-        exportWithTemplate(path,Constants.PAGENUM_10,Constants.MAXVALUE_10,Constants.OPERATOR_PLUSMINUS);
+    /**
+     * 生成第一个数是括号的表达式
+     * @param maxValue
+     * @param operator
+     * @return
+     */
+    public static String generateExprWithLeftBrackets(int maxValue,String operator) {
+        String expr;
+        String start = "("+RandomUtils.nextInt(1,maxValue+1)+")";
+        int end = RandomUtils.nextInt(1,maxValue+1);
+        StringBuilder sb = new StringBuilder();
+        sb.append(start);
+        String randomOperator = RandomStringUtils.random(1,operator);
+        sb.append(randomOperator);
+        sb.append(end);
+        ExpressionParser parser =new SpelExpressionParser();
+        Expression exp = parser.parseExpression(sb.toString());
+        int result = (int) exp.getValue();
+        if(result > maxValue || result < 0){
+            return generateExprWithLeftBrackets(maxValue,operator);
+        }else{
+
+            expr = exp.getExpressionString() + "=" + result;
+            expr = expr.replaceAll(Constants.PATTERN_BRACKETS,"(  )");
+            System.out.println(expr);
+        }
+        return expr;
+    }
+
+    /**
+     * 生成第二个数是括号的表达式
+     * @param maxValue
+     * @param operator
+     * @return
+     */
+    public static String generateExprWithRightBrackets(int maxValue,String operator) {
+        String expr;
+        int start = RandomUtils.nextInt(1,maxValue+1);
+        String end = "("+RandomUtils.nextInt(1,maxValue+1)+")";
+        StringBuilder sb = new StringBuilder();
+        sb.append(start);
+        String randomOperator = RandomStringUtils.random(1,operator);
+        sb.append(randomOperator);
+        sb.append(end);
+        ExpressionParser parser =new SpelExpressionParser();
+        Expression exp = parser.parseExpression(sb.toString());
+        int result = (int) exp.getValue();
+        if(result > maxValue || result < 0){
+            return generateExprWithRightBrackets(maxValue,operator);
+        }else{
+
+            expr = exp.getExpressionString() + "=" + result;
+            expr = expr.replaceAll(Constants.PATTERN_BRACKETS,"(  )");
+            System.out.println(expr);
+        }
+        return expr;
     }
 }
