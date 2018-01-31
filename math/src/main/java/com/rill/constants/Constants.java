@@ -18,7 +18,4 @@ public class Constants {
 
     public static String PATTERN_BRACKETS = "\\([^)]*\\)";
 
-    public static int EXPR_TYPE_NORMAL = 1;
-    public static int EXPR_TYPE_LEFT_BRACKETS = 2;
-    public static int EXPR_TYPE_RIGHT_BRACKETS = 3;
 }
