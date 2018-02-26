@@ -6,12 +6,12 @@ import com.rill.enums.ExprTypeEnum;
 import com.rill.model.MentalArithmeticModel;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
-import org.apache.xmlbeans.impl.common.ResolverUtil;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +39,7 @@ public class GenerateExpressionUtil {
                 rowList.add(initModel(maxValue,operator,exprType));
             }
         }
-        String targetPath = LocalDate.now().toString()+exprType.getName()+".xlsx";
+        String targetPath = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))+exprType.getName()+".xlsx";
         ExcelUtils.getInstance().exportObjects2Excel(templatePath, 0, rowList, null, MentalArithmeticModel.class, false, targetPath);
     }
 
