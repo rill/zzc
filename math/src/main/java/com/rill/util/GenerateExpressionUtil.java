@@ -86,7 +86,7 @@ public class GenerateExpressionUtil {
         StringBuilder sb = new StringBuilder();
         sb.append(start);
         String randomOperator = RandomStringUtils.random(1,operator);
-        sb.append(randomOperator);
+        sb.append(" ").append(randomOperator).append(" ");
         sb.append(end);
         ExpressionParser parser =new SpelExpressionParser();
         Expression exp = parser.parseExpression(sb.toString());
@@ -94,7 +94,7 @@ public class GenerateExpressionUtil {
         if(result > maxValue || result < 0){
             return generateExpr(maxValue,operator);
         }else{
-            expr = exp.getExpressionString() + "=";
+            expr = exp.getExpressionString() + " = ";
         }
         return expr;
     }
@@ -112,7 +112,7 @@ public class GenerateExpressionUtil {
         StringBuilder sb = new StringBuilder();
         sb.append(start);
         String randomOperator = RandomStringUtils.random(1,operator);
-        sb.append(randomOperator);
+        sb.append(" ").append(randomOperator).append(" ");
         sb.append(end);
         ExpressionParser parser =new SpelExpressionParser();
         Expression exp = parser.parseExpression(sb.toString());
@@ -121,8 +121,8 @@ public class GenerateExpressionUtil {
             return generateExprWithLeftBrackets(maxValue,operator);
         }else{
 
-            expr = exp.getExpressionString() + "=" + result;
-            expr = expr.replaceAll(Constants.PATTERN_BRACKETS,"(  )");
+            expr = exp.getExpressionString() + " = " + result;
+            expr = expr.replaceAll(Constants.PATTERN_BRACKETS,"(   )");
         }
         return expr;
     }
@@ -140,7 +140,7 @@ public class GenerateExpressionUtil {
         StringBuilder sb = new StringBuilder();
         sb.append(start);
         String randomOperator = RandomStringUtils.random(1,operator);
-        sb.append(randomOperator);
+        sb.append(" ").append(randomOperator).append(" ");
         sb.append(end);
         ExpressionParser parser =new SpelExpressionParser();
         Expression exp = parser.parseExpression(sb.toString());
@@ -149,8 +149,8 @@ public class GenerateExpressionUtil {
             return generateExprWithRightBrackets(maxValue,operator);
         }else{
 
-            expr = exp.getExpressionString() + "=" + result;
-            expr = expr.replaceAll(Constants.PATTERN_BRACKETS,"(  )");
+            expr = exp.getExpressionString() + " = " + result;
+            expr = expr.replaceAll(Constants.PATTERN_BRACKETS,"(   )");
         }
         return expr;
     }
